@@ -13,11 +13,13 @@ print("Please select data directory .cur")
 src_dir <- tk_choose.dir(caption = "Select data directory")
 files <- list.files(src_dir, pattern = "\\.(cur)|(CUR)$")
 print(paste("Preparing graphs for files in", dir))
-inputs <- varEntryDialog(vars = c('dst', 'position'), 
+inputs <- varEntryDialog(vars = c('dst', 'position', 'heating', 'cooling'), 
                          labels = c('Destination subdir name(e.g. graphs)',
-                                    "Legend (topleft, bottomleft, topright, bottomright"),
+                                    "Legend (topleft, bottomleft, topright, bottomright",
+                                    "Heating legend label", "Cooling legend label"),
                                     prompt = "Graphs dir and legend position")
 dir.create(file.path(src_dir, inputs$dst))
+was_wd <- getwd()
 setwd(file.path(src_dir, inputs$dst))
 for (data_file in files) {
   name_part <- sub("\\.[[:alnum:]]+$", "", data_file)
@@ -35,7 +37,7 @@ for (data_file in files) {
   with(heat_part, plot(TEMP, NSUSC, type = 'l', col = 'red', xlab = 'T, °C',
                        ylab = 'k/k max T', main = name_part, ylim = lims*1.05))
   with(cool_part, lines(TEMP, NSUSC, col = 'blue'))
-  legend('bottomleft', c("Нагрев", "Охлаждение"), col = c('red', 'blue'), lty = c(1,1,1))
+  legend('bottomleft', c(inputs$heating, inputs$cooling), col = c('red', 'blue'), lty = c(1,1,1))
   dev.off()
   print(paste("Graph", paste(name_part, "norm.png", sep = '_'), "written"))
   #2 graph
@@ -44,7 +46,8 @@ for (data_file in files) {
   with(heat_part, plot(TEMP, CSUSC, type = 'l', col = 'red', xlab = 'T, °C',
                        ylab = 'k*1e-6 SI', main = name_part, ylim = lims*1.05))
   with(cool_part, lines(TEMP, CSUSC, col = 'blue'))
-  legend('bottomleft', c("Нагрев", "Охлаждение"), col = c('red', 'blue'), lty = c(1,1,1))
+  legend('bottomleft', c(inputs$heating, inputs$cooling), col = c('red', 'blue'), lty = c(1,1,1))
   dev.off()
   print(paste("Graph", paste(name_part, "cur.png", sep = '_'), "written"))
 }
+setwd(was_wd)
