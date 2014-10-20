@@ -12,7 +12,7 @@ print("Please select data directory .cur")
 
 src_dir <- tk_choose.dir(caption = "Select data directory")
 files <- list.files(src_dir, pattern = "\\.(cur)|(CUR)$")
-print(paste("Preparing graphs for files in", dir))
+print(paste("Preparing graphs for files in", src_dir))
 inputs <- varEntryDialog(vars = c('dst', 'position', 'heating', 'cooling'), 
                          labels = c('Destination subdir name(e.g. graphs)',
                                     "Legend (topleft, bottomleft, topright, bottomright",
